@@ -49,7 +49,7 @@ neologger.log_this_error("This is an error message.")
 ## Customizing Styles and Templates
 
 ```
-from neonotifications import NeoLogger, Template
+from neologger import NeoLogger, Template
 
 # Initialize the logger
 neologger = NeoLogger("your_script.py")
@@ -76,7 +76,7 @@ neologger.log_with_elapsed_time("Operation completed.", start_time)
 ## StompBabbler
 
 ```
-from neonotifications import StompBabbler
+from neologger import StompBabbler
 
 # Initialize the babbler
 stomp_babbler = StompBabbler(
@@ -100,7 +100,7 @@ else:
 ## SlackNotification
 
 ```
-from neonotifications import SlackNotification
+from neologger import SlackNotification
 import os
 
 # Initialize the notification
