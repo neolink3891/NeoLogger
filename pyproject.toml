@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "neologger"
+version = "1.0.0"
+description = "NeoLogger is a Python library that wraps logging and notifications for Stomp and Slack in a simple and easy way."
+authors = [
+    { name="Pablo Martinez", email="neolink3891@gmail.com" },
+]
+readme = "README.md"
+license = { file = "LICENSE" }
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.9"
+dependencies = [
+    "stomp.py",
+    "requests",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/yourusername/your-package-name"
