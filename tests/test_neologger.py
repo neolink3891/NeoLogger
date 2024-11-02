@@ -1,5 +1,6 @@
 from neologger import NeoLogger
 from neologger.core import Template
+from neologger.core import FontColour, FontStyle
 
 neologger = NeoLogger("test_neolloger.py")
 
@@ -41,6 +42,11 @@ def main():
     print("\nExample with DARK Template:\n")
     neologger.set_template(Template.DARK)
     neologger.log_this("NeoLogger has been set with DARK Template")
+    print("\n")
+
+    print("\nExample with FontStyle customisation\n")
+    neologger.set_log_font_style(FontStyle.NORMAL, FontStyle.ITALIC, FontStyle.BOLD, FontStyle.UNDERLINE)
+    neologger.log_this("Font style has been customised")
     print("\n")
     
 
