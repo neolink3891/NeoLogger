@@ -1,5 +1,9 @@
 # NeoLogger
 
+![PyPI Downloads](https://static.pepy.tech/badge/neologger)     
+[neologger package in PyPi.org](https://pypi.org/project/neologger/)    
+
+
 <p align="center">
   <img src="docs/imgs/neologger_banner.png" alt="NeoLogger Banner">
 </p>
@@ -32,134 +36,16 @@ Python 3.6 or higher
 stomp.py    
 requests
 
-## Content
+## Package Content
 
 - [NeoLogger](docs/neologger.md)    
 Examples of NeoLogger usage as well as examples for customisation for logs.
 
+- [SlackNotifications](docs/slacknotifications.md)    
+Examples of Slack Notification usage as well as examples for custom for notifications.
 
-## StompBabbler
-
-```
-from neologger import StompBabbler
-
-# Initialize the babbler
-stomp_babbler = StompBabbler(
-    user_name="username",
-    user_password="password",
-    queue="/queue/destination",
-    server="stomp.server.com",
-    port=61613
-)
-
-# Send a message
-message = {"key": "value"}
-status, response = stomp_babbler.babble(message)
-
-if status:
-    print("Message sent successfully.")
-else:
-    print(f"Failed to send message: {response}")
-```
-
-## SlackNotification
-
-```
-from neologger import SlackNotification
-import os
-
-# Initialize the notification
-slack_notification = SlackNotification()
-
-# Set the Slack webhook URL (ensure this is stored securely)
-slack_notification.set_hook(os.getenv("SLACK_WEBHOOK_URL"))
-
-# Add data fields
-slack_notification.add_data("Environment", "Production")
-slack_notification.add_data("Status", "Operational")
-slack_notification.add_data("Version", "1.0.0")
-
-# Assemble the notification
-slack_notification.assemble_notification(
-    title="System Status Update",
-    summary="All systems are running smoothly.",
-    icon="white_check_mark"  # Use Slack emoji code without colons
-)
-
-# Send the notification
-status, response = slack_notification.send()
-
-if status:
-    print("Notification sent successfully.")
-else:
-    print(f"Failed to send notification: {response}")
-```
-
-## Configuration
-
-Environment Variables   
-SLACK_WEBHOOK_URL: The webhook URL for sending Slack notifications. It is recommended to store this securely, such as in environment variables or a configuration file not checked into version control.
-
-## Table Logging with NeoLogger
-
-In addition to logging messages and notifications, NeoLogger now includes a Table class to help you format and display tabular data within your logs. This feature is ideal for displaying structured data in an easy-to-read format.
-
-### Key Features
-Set Table Headers: Define column headers for your table.
-Customize Borders: Option to add borders around the table for clearer readability.
-Display Row Counts: Option to display the total number of rows at the end of the table.
-Auto-Adjust Column Widths: The table dynamically adjusts column widths based on the longest content in each column.
-Usage
-Here’s how to create and use a table with NeoLogger.
-
-### Basic Table Example
-```
-from neologger import Table, TableRow
-
-# Initialize the Table
-table = Table()
-table.set_title("User Information Table")
-
-# Set table headers
-table.set_header(["ID", "Name", "Role"])
-
-# Add rows of data
-row1 = table.new_row()
-row1.add_data(["1", "Alice", "Developer"])
-table.push_row(row1)
-
-row2 = table.new_row()
-row2.add_data(["2", "Bob", "Manager"])
-table.push_row(row2)
-
-row3 = table.new_row()
-row3.add_data(["3", "Charlie", "Analyst"])
-table.push_row(row3)
-
-# Enable borders and row count display
-table.enable_border()
-table.enable_total()
-
-# Calculate column sizes and draw the table
-table.calculate_sizes()
-table.draw_lines()
-```
-
-### Output Example
-
-The above code would output something like:
-
-```
-USER INFORMATION TABLE
-------------------------------
-| ID  | Name     | Role      |
-------------------------------
-| 1   | Alice    | Developer |
-| 2   | Bob      | Manager   |
-| 3   | Charlie  | Analyst   |
-------------------------------
-TOTAL ROWS: 3
-```
+- [StompBabbler](docs/stompbabbler.md)    
+Examples of Stomp Notification usage.
 
 ## Contributing
 
@@ -178,4 +64,6 @@ Utilizes the requests library for HTTP requests to Slack webhooks.
 
 ## Contact
 
-For questions or suggestions, please contact Pablo Martinez at neolink3891@gmail.com.
+For questions or suggestions, please contact Pablo Martinez at neolink3891@gmail.com    
+
+You can also connect with me on [LinkedIn](https://www.linkedin.com/in/orlando-martinez-2649051aa).

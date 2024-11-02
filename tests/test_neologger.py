@@ -1,6 +1,7 @@
 from neologger import NeoLogger
 from neologger.core import Template
 from neologger.core import FontColour, FontStyle
+import time
 
 neologger = NeoLogger("test_neolloger.py")
 
@@ -48,7 +49,14 @@ def main():
     neologger.set_log_font_style(FontStyle.NORMAL, FontStyle.ITALIC, FontStyle.BOLD, FontStyle.UNDERLINE)
     neologger.log_this("Font style has been customised")
     print("\n")
+
+    neologger.set_template(Template.BASE)
+    print("\nExample with Elapsed Time display\n")
+    time_track = neologger.get_time_mark()
+    time.sleep(3) # Adding delay
+    neologger.log_with_elapsed_time("Function completed.", time_track)
     
+    print("\n")
 
 if __name__ == "__main__":
     main()

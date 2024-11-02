@@ -186,3 +186,87 @@ Output:
 <p align="center">
   <img src="imgs/neologger_11.png" alt="NeoLogger Banner">
 </p>
+
+### 5 - Tracking Elapsed Time
+
+NeoLogger offers the possibility to display Elapsed Time in the log, you can do that by getting the initial time and the providing it to the logging method.
+
+Capturing the initial time.
+```
+time_track = neologger.get_time_mark()
+time.sleep(3) # Adding delay - import time
+```
+
+Then, use the method that display Elapsed Time
+```
+neologger.log_with_elapsed_time("Function completed.", time_track)
+```
+
+Output:
+<p align="center">
+  <img src="imgs/neologger_12.png" alt="NeoLogger Banner">
+</p>
+
+### 6 - Testing
+Please, refer to [test_neologger.py](../tests/test_neologger.py) to view the full source code for this example.
+
+## Table Logging with NeoLogger
+
+In addition to logging messages and notifications, NeoLogger now includes a Table class to help you format and display tabular data within your logs. This feature is ideal for displaying structured data in an easy-to-read format.
+
+### Key Features
+Set Table Headers: Define column headers for your table.
+Customize Borders: Option to add borders around the table for clearer readability.
+Display Row Counts: Option to display the total number of rows at the end of the table.
+Auto-Adjust Column Widths: The table dynamically adjusts column widths based on the longest content in each column.
+Usage
+Here’s how to create and use a table with NeoLogger.
+
+### Basic Table Example
+```
+from neologger import Table, TableRow
+
+# Initialize the Table
+table = Table()
+table.set_title("User Information Table")
+
+# Set table headers
+table.set_header(["ID", "Name", "Role"])
+
+# Add rows of data
+row1 = table.new_row()
+row1.add_data(["1", "Alice", "Developer"])
+table.push_row(row1)
+
+row2 = table.new_row()
+row2.add_data(["2", "Bob", "Manager"])
+table.push_row(row2)
+
+row3 = table.new_row()
+row3.add_data(["3", "Charlie", "Analyst"])
+table.push_row(row3)
+
+# Enable borders and row count display
+table.enable_border()
+table.enable_total()
+
+# Calculate column sizes and draw the table
+table.calculate_sizes()
+table.draw_lines()
+```
+
+### Output Example
+
+The above code would output something like:
+
+```
+USER INFORMATION TABLE
+------------------------------
+| ID  | Name     | Role      |
+------------------------------
+| 1   | Alice    | Developer |
+| 2   | Bob      | Manager   |
+| 3   | Charlie  | Analyst   |
+------------------------------
+TOTAL ROWS: 3
+```
