@@ -1,5 +1,9 @@
 # NeoLogger
 
+<p align="center">
+  <img src="docs/imgs/neologger_banner.png" alt="NeoLogger Banner">
+</p>
+
 A collection of Python notification classes for enhanced logging, messaging, and Slack notifications.
 
 ## Overview
@@ -28,50 +32,11 @@ Python 3.6 or higher
 stomp.py    
 requests
 
-## Usage
+## Content
 
-### NeoLogger
+- [NeoLogger](docs/neolloger.md)    
+Examples of NeoLogger usage as well as examples for customisation for logs.
 
-Basic Usage
-
-```
-from neologger import NeoLogger
-
-# Initialize the logger
-neologger = NeoLogger("your_script.py")
-
-# Log messages
-neologger.log_this("This is a general information message.")
-neologger.log_this_warning("This is a warning message.")
-neologger.log_this_error("This is an error message.")
-```
-
-## Customizing Styles and Templates
-
-```
-from neologger import NeoLogger, Template
-
-# Initialize the logger
-neologger = NeoLogger("your_script.py")
-
-# Set a predefined template
-neologger.set_template(Template.DARK)
-
-# Log messages with the new style
-neologger.log_this("This message uses the DARK template.")
-```
-
-## Measuring Elapsed Time
-
-```
-# Get a time mark
-start_time = neologger.get_time_mark()
-
-# ... perform some operations ...
-
-# Log with elapsed time
-neologger.log_with_elapsed_time("Operation completed.", start_time)
-```
 
 ## StompBabbler
 
