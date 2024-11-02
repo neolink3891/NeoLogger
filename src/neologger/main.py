@@ -504,6 +504,8 @@ class SlackNotification:
         # Set the assembled blocks as the message body
         self.body = {"blocks": blocks}
 
+        self.data = []
+
     def send(self):
         """
         Send the assembled notification to Slack.
@@ -532,3 +534,296 @@ class SlackNotification:
                 return False, "Empty Body"
         else:
             return False, "Not Ready"
+
+class Table:
+    """
+    A class to display data in a table format.
+    """
+
+    def __init__(self):
+        """
+        Initialize the Table with default settings.
+        """
+        self.title = ""
+        self.display_total = False
+        self.display_border = False
+        self.header = TableRow()
+        self.data = []
+        self.sizes = []
+        self.size_format = ""
+        self.table = ""
+        self.table_width = 0
+
+    def set_header(self, header):
+        """
+        Set the header row for the table.
+
+        Args:
+            header (list): A list of column headers.
+        """
+        self.header.add_data(header)
+
+    def set_title(self, text):
+        """
+        Set the title of the table.
+
+        Args:
+            text (str): The title of the table.
+        """
+        self.title = text
+
+    def enable_total(self):
+        """Enable the display of the total number of rows."""
+        self.display_total = True
+
+    def enable_border(self):
+        """Enable the display of a border around the table."""
+        self.display_border = True
+
+    def new_row(self):
+        """
+        Create a new row instance.
+
+        Returns:
+            TableRow: A new TableRow instance with the same number of columns as the header.
+        """
+        row = TableRow()
+        row.total = self.header.total
+        return row
+
+    def push_row(self, row):
+        """
+        Add a row to the table's data.
+
+        Args:
+            row (TableRow): A TableRow instance to add to the table.
+        """
+        self.data.append(row)
+
+    def draw_lines(self):
+        """
+        Construct and print the table based on the current settings.
+        """
+        self.table = "\n"
+        total_rows = 0
+
+        # Title
+        if self.title != "":
+            self.table += FontStyle.BOLD + self.title.upper() + FontStyle.ENDC + "\n"
+        # Border
+        if self.display_border:
+            self.table += "-" * self.table_width + "\n"
+        # Header
+        if len(self.header.rows):
+            if self.display_border:
+                self.table += "|" + self.size_format.format(*self.header.rows[0]) + "|\n"
+            else:
+                self.table += self.size_format.format(*self.header.rows[0]) + "\n"
+        if self.display_border:
+            self.table += "-" * self.table_width + "\n"
+        # Data rows
+        for dt in self.data:
+            for rw in dt.rows:
+                if self.display_border:
+                    self.table += "|" + self.size_format.format(*rw) + "|\n"
+                else:
+                    self.table += self.size_format.format(*rw) + "\n"
+                total_rows += 1
+        # Border after rows
+        if self.display_border:
+            self.table += "-" * self.table_width + "\n"
+        # Total row count
+        if self.display_total:
+            self.table += FontStyle.BOLD + "TOTAL ROWS: " + str(total_rows) + FontStyle.ENDC + "\n"
+        
+        print(self.table)
+
+    def calculate_sizes(self):
+        """
+        Calculate column widths based on the longest content in each column.
+        """
+        max_size = 0
+        self.sizes = []
+        current_pos = 0
+        self.size_format = ""
+        self.table_width = 0
+
+        # Calculate the max size for each column
+        for hd in self.header.rows:
+            for dt in hd:
+                col_len = len(dt)
+                max_size = 0
+                for rw in self.data:
+                    col_len = len(rw.rows[0][current_pos])
+                    if col_len > max_size:
+                        max_size = col_len
+                current_pos += 1
+                self.sizes.append(max_size + 1)
+
+        # Format specification
+        for sz in self.sizes:
+            self.size_format += "{:<" + str(sz) + "} "
+            self.table_width += sz + 1
+        self.table_width += 2
+
+class TableRow:
+    """
+    A class to represent a row in a table.
+    """
+
+    def __init__(self):
+        """Initialize the TableRow with default settings."""
+        self.rows = []
+        self.total = 0
+
+    def add_data(self, data):
+        """
+        Add a list of data as a single row.
+
+        Args:
+            data (list): A list of values for the row.
+        """
+        self.total = 0
+        self.rows = []
+        tempo_row = []
+
+        if len(data) > 0:
+            for dt in data:
+                self.total += 1
+                tempo_row.append(dt)
+
+        if self.total == len(data):
+            self.rows.append(data)
+
+    def fill_row(self, data):
+        """
+        Add additional rows of data.
+
+        Args:
+            data (list): A list of values to add as a new row.
+
+        Returns:
+            bool: True if the data length matches the header length, otherwise False.
+        """
+        if len(data) == self.total:
+            self.rows.append(data)
+            return True
+        else:
+            return False
+
+# class Table:
+#     def __init__(self):
+#         self.title = ""
+#         self.display_total = False
+#         self.display_border = False
+#         self.header = TableRow()
+#         self.data = []
+#         self.sizes = []
+#         self.size_format = ""
+#         self.table = ""
+#         self.table_width = 0
+    
+#     def set_header(self, header):
+#         self.header.add_data(header)
+    
+#     def set_title(self, text):
+#         self.title = text
+    
+#     def enable_total(self):
+#         self.display_total = True
+
+#     def enable_border(self):
+#         self.display_border = True
+
+#     def new_row(self):
+#         row = TableRow()
+#         row.total = self.header.total
+
+#         return row
+    
+#     def push_row(self, row):
+#         self.data.append(row)
+    
+#     def draw_lines(self):
+#         self.table = "\n"
+#         total_rows = 0
+
+#         if self.title != "":
+#             self.table += FontStyle.BOLD + self.title.upper() + FontStyle.ENDC + "\n"
+#         if self.display_border:
+#             self.table += "-" * self.table_width + "\n"
+#         if len(self.header.rows):
+#             if self.display_border:
+#                 self.table += "|" + self.size_format.format(*self.header.rows[0]) + "|\n"
+#             else:
+#                 self.table += self.size_format.format(*self.header.rows[0]) + "\n"
+#         if self.display_border:
+#             self.table += "-" * self.table_width + "\n"
+        
+#         for dt in self.data:
+#             for rw in dt.rows:
+#                 if self.display_border:
+#                     self.table += "|" + self.size_format.format(*rw) + "|\n"
+#                 else:
+#                     self.table += self.size_format.format(*rw) + "\n"
+#                 total_rows += 1
+        
+#         if self.display_border:
+#             self.table += "-" * self.table_width + "\n"
+#         if self.display_total:
+#             self.table += FontStyle.BOLD + "TOTAL ROWS: " + str(total_rows) + FontStyle.ENDC + "\n"
+        
+#         print(self.table)
+        
+    
+#     def calculate_sizes(self):
+#         max_size = 0
+#         self.sizes = []
+#         current_pos = 0
+#         self.size_format = ""
+#         self.table_width = 0
+
+#         for hd in self.header.rows:
+#             for dt in hd:
+#                 col_len = len(dt)
+#                 max_size = 0
+                
+#                 for rw in self.data:
+#                     col_len = len(rw.rows[0][current_pos])
+
+#                     if col_len > max_size:
+#                         max_size = col_len
+            
+#                 current_pos += 1
+
+#                 self.sizes.append(max_size + 1)
+        
+#         for sz in self.sizes:
+#             self.size_format += "{:<" + str(sz) + "} "
+#             self.table_width += sz + 1
+#         self.table_width += 2
+
+# class TableRow:
+#     def __init__(self):
+#         self.rows = []
+#         self.total = 0
+    
+#     def add_data(self, data):
+#         self.total = 0
+#         self.rows = []
+#         tempo_row = []
+
+#         if len(data) > 0:
+#             for dt in data:
+#                 self.total += 1
+#                 tempo_row.append(dt)
+
+#         if self.total == len(data):
+#             self.rows.append(data)
+    
+#     def fill_row(self, data):
+#         if len(data) == self.total:
+#             self.rows.append(data)
+#             return True
+#         else:
+#             return False
