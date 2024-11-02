@@ -1,9 +1,10 @@
-from neologger import NeoLogger
+from neologger import NeoLogger, Table
 from neologger.core import Template
 from neologger.core import FontColour, FontStyle
 import time
 
 neologger = NeoLogger("test_neolloger.py")
+table = Table()
 
 def main():
     print("\nBasic example:\n")
@@ -53,10 +54,30 @@ def main():
     neologger.set_template(Template.BASE)
     print("\nExample with Elapsed Time display\n")
     time_track = neologger.get_time_mark()
-    time.sleep(3) # Adding delay
+    time.sleep(1) # Adding delay
     neologger.log_with_elapsed_time("Function completed.", time_track)
-    
     print("\n")
+
+    print("\nExample of Table")
+    table.set_title("Last month sales report.")
+    header = ["ID", "Name", "Sales", "Rank", "Last Check"]
+    table.set_header(header)
+    row = table.new_row()
+    row_content = [1, "Pablo", "£12,500", "1st", "2024-10-12"]
+    row.fill_row(row_content)
+    table.push_row(row)
+    row = table.new_row()
+    row_content = ["2", "Orlando", "£22,750", "2st", "2024-10-11"]
+    row.fill_row(row_content)
+    table.push_row(row)
+    row = table.new_row()
+    row_content = ["3", "Beatriz", "£23,450", "3st", "2024-10-13"]
+    row.fill_row(row_content)
+    table.push_row(row)
+    table.enable_total()
+    table.enable_border()
+    neologger.log_this(table.render())
+
 
 if __name__ == "__main__":
     main()

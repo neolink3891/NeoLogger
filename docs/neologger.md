@@ -2,18 +2,18 @@
 
 NeoLogger makes command line log more detailed and meaningful.
 
-The structure of the log for the basic form as follow:  
+The basic log structure is as follows: 
 _timestamp - file >> function | log message_
 
 ### 1 - Usage
 
-Import classes
+Import the necessary classes:
 
 ```
 from neologger import NeoLogger
 ```
 
-Create an NeoLogger object, pass the name of the file where the object is created.
+Create a NeoLogger object and pass the name of the file where the object is created:
 
 ```
 neologger = NeoLogger("test_neolloger.py")
@@ -32,8 +32,9 @@ Output:
 
 ### 2- Labels
 
-NeoLogger includes the possibility to visually display labels that differentiate logs, currently as for version 1.1.0, you can add labels for OK, WARNING, COMPLETED, SUCCESS, and ERROR.   
-To add a label to the output, just call the proper method, as follow:
+NeoLogger allows you to visually display labels that differentiate logs. As of version 1.1.0, you can add labels for OK, WARNING, COMPLETED, SUCCESS, and ERROR.
+
+To add a label to the output, call the appropriate method as follows:
 
 * OK 
 ```
@@ -81,14 +82,15 @@ Output:
 </p>
 
 ### 3 - Templates
-Templates allow to display logs with predefined colours, to include a Template with NeoLogger you need to import the Template class from the neologger.core package.    
-Templates can be changed at anytime in runtime.
+Templates allow you to display logs with predefined colours. To use a Template with NeoLogger, import the Template class from neologger.core.
+
+Templates can be changed at any time during runtime.
 
 ```
 from neologger.core import Template
 ```
 
-As in version 1.1.0, the following Templates are available: BASE, NORMAL, DARK
+Available Templates as of version 1.1.0: BASE, NORMAL, DARK
 
 * BASE 
 ```
@@ -121,15 +123,13 @@ Output:
 </p>
 
 ### 4 - Customising Logs display
-NeoLogger lets you customise the logs on your own style, you can do this by importing FontColour and FontStyle classes from neologger.core package.
+NeoLogger allows you to customize logs to match your style. Import the FontColour and FontStyle classes from the neologger.core package
 
 ```
 from neologger.core import FontColour, FontStyle
 ```
 
-NeoLogger provides two methods to customise logs.   
-
-The first method allow you to set the text colour for each of the sections of the log (date, file name, function name, message).
+NeoLogger provides two methods for customization:  
 
 * Setting up Font Colour with _set_log_font_colour_
 
@@ -153,7 +153,7 @@ BLACK           # Black text
 WHITE           # White text
 ```
 
-Set the custom Font colours.
+Set custom font colours.
 
 ```
 neologger.set_log_font_colour(FontColour.CYAN, FontColour.GREEN, FontColour.RED, FontColour.YELLOW)
@@ -166,7 +166,7 @@ Output:
 
 * Setting up Font Style with _set_log_font_style_
 
-As in version 1.1.0, the folloging styles are available:
+As of version 1.1.0, the following styles are available:
 ```
 BOLD                # Bold text
 ITALIC              # Italic text
@@ -176,7 +176,7 @@ DIM                 # Dim text
 NORMAL              # Normal intensity text
 ```
 
-Set the custom Font styles.
+Set custom font styles.
 
 ```
 neologger.set_log_font_style(FontStyle.NORMAL, FontStyle.ITALIC, FontStyle.BOLD, FontStyle.UNDERLINE)
@@ -189,15 +189,15 @@ Output:
 
 ### 5 - Tracking Elapsed Time
 
-NeoLogger offers the possibility to display Elapsed Time in the log, you can do that by getting the initial time and the providing it to the logging method.
+NeoLogger provides the option to display elapsed time in the log. To do this, capture the initial time and then pass it to the logging method.
 
-Capturing the initial time.
+Capture the initial time:
 ```
 time_track = neologger.get_time_mark()
 time.sleep(3) # Adding delay - import time
 ```
 
-Then, use the method that display Elapsed Time
+Then, use the method to display elapsed time:
 ```
 neologger.log_with_elapsed_time("Function completed.", time_track)
 ```
@@ -207,66 +207,87 @@ Output:
   <img src="imgs/neologger_12.png" alt="NeoLogger Banner">
 </p>
 
+### 6 - Displaying Data Tables
+
+NeoLogger has the capability to display Data Tables in the logs, in order to use this feature, you need to import Table class from neologger package. The Tables created with NeoLogger will resize automatically.
+
+```
+from neologger import Table
+```
+
+Create a object of type Table
+
+```
+table = Table()
+```
+
+To display a Table you need to define the Header, which is a list of strings, and add it to the table object with method _set_header_
+
+```
+header = ["ID", "Name", "Sales", "Rank", "Last Check"]
+table.set_header(header)
+```
+
+From this point, the Table object will expect each row with the same size of the Header.    
+You can add rows by pulling a new row from the table with _new_row()_ method, then use the _fill_row_ method to add a collection of string containing the data for the row, and lastly use the method _push_row_ to add it to the Table, as follow:
+
+```
+row = table.new_row()
+row_content = ["1", "Pablo", "£12,500", "1st", "2024-10-12"]
+row.fill_row(row_content)
+table.push_row(row)
+```
+
+Add as many rows as needed, and then use the method _render_ to show the table in the logs.
+
+```
+neologger.log_this(table.render())
+```
+
+Output:
+<p align="center">
+  <img src="imgs/neologger_13.png" alt="NeoLogger Banner">
+</p>
+
+#### 5.1 - Table Title
+
+Tables created with NeoLogger's Table class can show a Title, use the method _set_title_ to provide it. The title will be converted to upper case with a different colour.
+
+```
+table.set_title("Last month sales report.")
+```
+
+Output:
+<p align="center">
+  <img src="imgs/neologger_14.png" alt="NeoLogger Banner">
+</p>
+
+#### 5.2 - Displaying Row Count
+
+NeoLogger Tables can also show the total number of rows at the botton, if you want to display it, use the method _enable_total_ 
+
+```
+table.enable_total()
+```
+
+Output:
+<p align="center">
+  <img src="imgs/neologger_15.png" alt="NeoLogger Banner">
+</p>
+
+#### 5.3 - Display Borders
+
+Optionally, you can show borders for the table by using the method _enable_border_
+
+```
+table.enable_border()
+```
+
+Output:
+<p align="center">
+  <img src="imgs/neologger_16.png" alt="NeoLogger Banner">
+</p>
+
+
 ### 6 - Testing
 Please, refer to [test_neologger.py](../tests/test_neologger.py) to view the full source code for this example.
-
-## Table Logging with NeoLogger
-
-In addition to logging messages and notifications, NeoLogger now includes a Table class to help you format and display tabular data within your logs. This feature is ideal for displaying structured data in an easy-to-read format.
-
-### Key Features
-Set Table Headers: Define column headers for your table.
-Customize Borders: Option to add borders around the table for clearer readability.
-Display Row Counts: Option to display the total number of rows at the end of the table.
-Auto-Adjust Column Widths: The table dynamically adjusts column widths based on the longest content in each column.
-Usage
-Here’s how to create and use a table with NeoLogger.
-
-### Basic Table Example
-```
-from neologger import Table, TableRow
-
-# Initialize the Table
-table = Table()
-table.set_title("User Information Table")
-
-# Set table headers
-table.set_header(["ID", "Name", "Role"])
-
-# Add rows of data
-row1 = table.new_row()
-row1.add_data(["1", "Alice", "Developer"])
-table.push_row(row1)
-
-row2 = table.new_row()
-row2.add_data(["2", "Bob", "Manager"])
-table.push_row(row2)
-
-row3 = table.new_row()
-row3.add_data(["3", "Charlie", "Analyst"])
-table.push_row(row3)
-
-# Enable borders and row count display
-table.enable_border()
-table.enable_total()
-
-# Calculate column sizes and draw the table
-table.calculate_sizes()
-table.draw_lines()
-```
-
-### Output Example
-
-The above code would output something like:
-
-```
-USER INFORMATION TABLE
-------------------------------
-| ID  | Name     | Role      |
-------------------------------
-| 1   | Alice    | Developer |
-| 2   | Bob      | Manager   |
-| 3   | Charlie  | Analyst   |
-------------------------------
-TOTAL ROWS: 3
-```

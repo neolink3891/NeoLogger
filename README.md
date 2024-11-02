@@ -1,18 +1,19 @@
 # NeoLogger
 
 ![PyPI Downloads](https://static.pepy.tech/badge/neologger)     
-[neologger package in PyPi.org](https://pypi.org/project/neologger/)    
-
+   
 
 <p align="center">
   <img src="docs/imgs/neologger_banner.png" alt="NeoLogger Banner">
 </p>
 
-A collection of Python notification classes for enhanced logging, messaging, and Slack notifications.
+A collection of Python notification classes for enhanced logging, messaging, and Slack notifications.   
+
+[Find me on PyPi.org](https://pypi.org/project/neologger/) 
 
 ## Overview
 
-NeoNotifications provides a set of tools to improve logging output with customizable styles, send messages over STOMP protocol, and send Slack notifications with rich formatting.
+NeoLogger provides a set of tools to improve logging output with customizable styles, send messages over STOMP protocol, and send Slack notifications with rich formatting.
 
 ## Features
 
@@ -22,7 +23,7 @@ NeoNotifications provides a set of tools to improve logging output with customiz
 
 ## Installation
 
-You can install NeoNotifications via pip:
+You can install NeoLogger via pip:
 
 ```bash
 pip install neologger
@@ -30,7 +31,7 @@ pip install neologger
 
 ## Requirements
 
-Python 3.6 or higher
+Python 3.9 or higher
 
 ## Dependencies:
 stomp.py    
@@ -64,6 +65,10 @@ Utilizes the requests library for HTTP requests to Slack webhooks.
 
 ## Contact
 
-For questions or suggestions, please contact Pablo Martinez at neolink3891@gmail.com    
+📧 - For questions or suggestions, please contact Pablo Martinez at neolink3891@gmail.com    
 
-You can also connect with me on [LinkedIn](https://www.linkedin.com/in/orlando-martinez-2649051aa).
+🌐 - You can also connect with me on [LinkedIn](https://www.linkedin.com/in/orlando-martinez-2649051aa).
+
+## Full Documentation
+
+For full documentation, please refer to our [GitHub repository](https://github.com/neolink3891/NeoLogger).

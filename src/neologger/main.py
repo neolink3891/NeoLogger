@@ -600,10 +600,13 @@ class Table:
         """
         self.data.append(row)
 
-    def draw_lines(self):
+    def render(self):
         """
         Construct and print the table based on the current settings.
         """
+
+        self.calculate_sizes()
+
         self.table = "\n"
         total_rows = 0
 
@@ -636,7 +639,7 @@ class Table:
         if self.display_total:
             self.table += FontStyle.BOLD + "TOTAL ROWS: " + str(total_rows) + FontStyle.ENDC + "\n"
         
-        print(self.table)
+        return self.table
 
     def calculate_sizes(self):
         """
@@ -654,7 +657,7 @@ class Table:
                 col_len = len(dt)
                 max_size = 0
                 for rw in self.data:
-                    col_len = len(rw.rows[0][current_pos])
+                    col_len = len(str(rw.rows[0][current_pos]))
                     if col_len > max_size:
                         max_size = col_len
                 current_pos += 1
@@ -690,10 +693,10 @@ class TableRow:
         if len(data) > 0:
             for dt in data:
                 self.total += 1
-                tempo_row.append(dt)
+                tempo_row.append(str(dt))
 
         if self.total == len(data):
-            self.rows.append(data)
+            self.rows.append(tempo_row)
 
     def fill_row(self, data):
         """
