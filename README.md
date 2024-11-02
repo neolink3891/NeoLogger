@@ -34,7 +34,7 @@ requests
 
 ## Content
 
-- [NeoLogger](docs/neolloger.md)    
+- [NeoLogger](docs/neologger.md)    
 Examples of NeoLogger usage as well as examples for customisation for logs.
 
 
