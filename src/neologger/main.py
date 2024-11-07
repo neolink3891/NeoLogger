@@ -600,6 +600,34 @@ class Table:
         """
         self.data.append(row)
 
+    def from_json(self, data):
+        if isinstance(data, list) and all(isinstance(item, dict) for item in data):
+            try:
+                all_keys = list(data[0].keys())
+                
+                all_rows_valid = all(set(all_keys) == set(row.keys()) for row in data)
+                
+                if all_rows_valid:
+                    self.set_header(all_keys)  
+                    
+                    for dt in data:
+                        row = self.new_row()
+                        
+                        row_content = [dt[key] for key in all_keys]
+                        
+                        row.fill_row(row_content)  
+                        self.push_row(row) 
+
+                    self.render()
+                else:
+                    self.table = "INCOMPLETED DATA"
+            except TypeError:
+                self.table = "INVALID JSON"
+        else:
+            self.table = "INVALID TYPE"
+        
+        return self.table
+
     def render(self):
         """
         Construct and print the table based on the current settings.
@@ -607,7 +635,7 @@ class Table:
 
         self.calculate_sizes()
 
-        self.table = "\n"
+        self.table = "\n\n"
         total_rows = 0
 
         # Title
@@ -637,7 +665,9 @@ class Table:
             self.table += "-" * self.table_width + "\n"
         # Total row count
         if self.display_total:
-            self.table += FontStyle.BOLD + "TOTAL ROWS: " + str(total_rows) + FontStyle.ENDC + "\n"
+            self.table += FontStyle.BOLD + FontStyle.ITALIC + "TOTAL ROWS: " + str(total_rows) + FontStyle.ENDC + "\n"
+        
+        self.table += "\n"
         
         return self.table
 
@@ -654,14 +684,18 @@ class Table:
         # Calculate the max size for each column
         for hd in self.header.rows:
             for dt in hd:
-                col_len = len(dt)
+                hd_col_len = len(dt)
                 max_size = 0
                 for rw in self.data:
                     col_len = len(str(rw.rows[0][current_pos]))
                     if col_len > max_size:
                         max_size = col_len
                 current_pos += 1
-                self.sizes.append(max_size + 1)
+                sel_max = hd_col_len
+                if col_len > sel_max:
+                    sel_max = col_len
+                
+                self.sizes.append(sel_max + 3)
 
         # Format specification
         for sz in self.sizes:

@@ -4,7 +4,6 @@ from neologger.core import FontColour, FontStyle
 import time
 
 neologger = NeoLogger("test_neolloger.py")
-table = Table()
 
 def main():
     print("\nBasic example:\n")
@@ -54,29 +53,47 @@ def main():
     neologger.set_template(Template.BASE)
     print("\nExample with Elapsed Time display\n")
     time_track = neologger.get_time_mark()
-    time.sleep(1) # Adding delay
+    # time.sleep(1) # Adding delay
     neologger.log_with_elapsed_time("Function completed.", time_track)
     print("\n")
 
     print("\nExample of Table")
+    table = Table()
     table.set_title("Last month sales report.")
-    header = ["ID", "Name", "Sales", "Rank", "Last Check"]
+    header = ["No", "Depto", "Name", "Top Product", "Total Sales", "Rank"]
     table.set_header(header)
     row = table.new_row()
-    row_content = [1, "Pablo", "£12,500", "1st", "2024-10-12"]
+    row_content = ["1", "IT", "Pablo Martinez", "Servers", "£12,500", "1sr"]
     row.fill_row(row_content)
     table.push_row(row)
     row = table.new_row()
-    row_content = ["2", "Orlando", "£22,750", "2st", "2024-10-11"]
+    row_content = ["2", "Marketing", "Beatriz Romero", "Campain", "£11,250", "2nd"]
     row.fill_row(row_content)
     table.push_row(row)
     row = table.new_row()
-    row_content = ["3", "Beatriz", "£23,450", "3st", "2024-10-13"]
+    row_content = ["3", "Automotive", "Gabriela Martinez", "Peugeot 3008", "£11,108", "3rd"]
+    row.fill_row(row_content)
+    table.push_row(row)
+    row = table.new_row()
+    row_content = ["4", "Robotics", "Aurora Martinez", "Robotic Arm", "£10,090", "4th"]
     row.fill_row(row_content)
     table.push_row(row)
     table.enable_total()
     table.enable_border()
     neologger.log_this(table.render())
+
+    table = Table()
+    jdata = [
+        {"id": "1", "name": "ABC", "code": "LMN"},
+        {"id": "2", "name": "CDE", "code": "OPQ"},
+        {"id": "3", "name": "FGH", "code": "RST"},
+        {"id": "4", "name": "IJK", "code": "UVW"}
+    ]
+    
+    table.set_title("DATA FROM JSON")
+    table.enable_total()
+    table.enable_border()
+    neologger.log_this(table.from_json(jdata))
 
 
 if __name__ == "__main__":

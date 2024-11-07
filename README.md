@@ -42,8 +42,22 @@ requests
 - [NeoLogger](docs/neologger.md)    
 Examples of NeoLogger usage as well as examples for customisation for logs.
 
+<p align="center">
+  <img src="docs/imgs/neologger_6.png" alt="NeoLogger Banner">
+</p>
+<p align="center">
+  <img src="docs/imgs/neologger_11.png" alt="NeoLogger Banner">
+</p>
+<p align="center">
+  <img src="docs/imgs/neologger_16.png" alt="NeoLogger Banner">
+</p>
+
 - [SlackNotifications](docs/slacknotifications.md)    
 Examples of Slack Notification usage as well as examples for custom for notifications.
+
+<p align="center">
+  <img src="docs/imgs/neologger_17.png" alt="NeoLogger Banner">
+</p>
 
 - [StompBabbler](docs/stompbabbler.md)    
 Examples of Stomp Notification usage.
