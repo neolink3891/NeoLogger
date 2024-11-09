@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "neologger"
-version = "1.1.0"
+version = "1.2.1"
 description = "NeoLogger is a Python library that wraps logging and notifications for Stomp and Slack in a simple and easy way."
 authors = [
     { name="Pablo Martinez", email="neolink3891@gmail.com" },

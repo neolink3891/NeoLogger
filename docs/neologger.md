@@ -224,7 +224,7 @@ table = Table()
 To display a Table you need to define the Header, which is a list of strings, and add it to the table object with method _set_header_
 
 ```
-header = ["ID", "Name", "Sales", "Rank", "Last Check"]
+header = ["No", "Depto", "Name", "Top Product", "Total Sales", "Rank"]
 table.set_header(header)
 ```
 
@@ -233,12 +233,29 @@ You can add rows by pulling a new row from the table with _new_row()_ method, th
 
 ```
 row = table.new_row()
-row_content = ["1", "Pablo", "£12,500", "1st", "2024-10-12"]
+row_content = ["1", "IT", "Pablo Martinez", "Servers", "£12,500", "1sr"]
 row.fill_row(row_content)
 table.push_row(row)
 ```
 
 Add as many rows as needed, and then use the method _render_ to show the table in the logs.
+
+```
+    row = table.new_row()
+    row_content = ["2", "Marketing", "Beatriz Romero", "Campain", "£11,250", "2nd"]
+    row.fill_row(row_content)
+    table.push_row(row)
+    row = table.new_row()
+    row_content = ["3", "Automotive", "Gabriela Martinez", "Peugeot 3008", "£11,108", "3rd"]
+    row.fill_row(row_content)
+    table.push_row(row)
+    row = table.new_row()
+    row_content = ["4", "Robotics", "Aurora Martinez", "Robotic Arm", "£10,090", "4th"]
+    row.fill_row(row_content)
+    table.push_row(row)
+```
+
+When all rows are added, call the render method to display the table.
 
 ```
 neologger.log_this(table.render())
@@ -251,7 +268,7 @@ Output:
 
 #### 5.1 - Table Title
 
-Tables created with NeoLogger's Table class can show a Title, use the method _set_title_ to provide it. The title will be converted to upper case with a different colour.
+Tables created with NeoLogger's Table class can show a Title, use the method _set_title_ to provide it before calling the _render_ method. The title will be converted to upper case with a different colour.
 
 ```
 table.set_title("Last month sales report.")
@@ -264,7 +281,7 @@ Output:
 
 #### 5.2 - Displaying Row Count
 
-NeoLogger Tables can also show the total number of rows at the botton, if you want to display it, use the method _enable_total_ 
+NeoLogger Tables can also show the total number of rows at the botton, if you want to display it, use the method _enable_total_ before calling the _render_ method.
 
 ```
 table.enable_total()
@@ -277,7 +294,7 @@ Output:
 
 #### 5.3 - Display Borders
 
-Optionally, you can show borders for the table by using the method _enable_border_
+Optionally, you can show borders for the table by using the method _enable_border_ before calling the _render_ method.
 
 ```
 table.enable_border()
@@ -288,6 +305,37 @@ Output:
   <img src="imgs/neologger_16.png" alt="NeoLogger Banner">
 </p>
 
+#### 5.4 - Tables from JSON [from version 1.2.1]
+
+Since version 1.2.1 NeoLogger's Table class can convert JSON objects to Tables with all Table's features. Thus, the JSON object must meet the following criteria:
+- Type: _list_ of rows.
+- Contain the same keys.
+- The keys must be in the same order (otherwise data will not be displayed properly)
+
+The following is an example of a proper JSON object that can be use to render a Table:
+
+```
+    jdata = [
+        {"Id": "1011", "Code": "Ab99s0r", "Expiration": "13-10-2024", "Status": "ACTIVE", "Base": "https://endpoint.com/api/action"},
+        {"Id": "1012", "Code": "12dLLd0", "Expiration": "12-11-2024", "Status": "ACTIVE", "Base": "https://endpoint.com/api/action"},
+        {"Id": "1013", "Code": "5540xxD", "Expiration": "10-08-2024", "Status": "ACTIVE", "Base": "https://endpoint.com/api/action"},
+        {"Id": "1014", "Code": "0dd9AsX", "Expiration": "08-05-2024", "Status": "INACTIVE", "Base": "https://endpoint.com/api/action"}
+    ]
+```
+
+Then, call the method _from_json_ method, the following code shows this action.
+
+```
+    table.set_title("DATA FROM JSON")
+    table.enable_total()
+    table.enable_border()
+    neologger.log_this(table.from_json(jdata))
+```
+
+Output:
+<p align="center">
+  <img src="imgs/neologger_18.png" alt="NeoLogger Banner">
+</p>
 
 ### 6 - Testing
 Please, refer to [test_neologger.py](../tests/test_neologger.py) to view the full source code for this example.

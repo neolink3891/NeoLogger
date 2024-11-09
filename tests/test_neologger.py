@@ -82,12 +82,13 @@ def main():
     table.enable_border()
     neologger.log_this(table.render())
 
+    print("\nExample of Table from JSON")
     table = Table()
     jdata = [
-        {"id": "1", "name": "ABC", "code": "LMN"},
-        {"id": "2", "name": "CDE", "code": "OPQ"},
-        {"id": "3", "name": "FGH", "code": "RST"},
-        {"id": "4", "name": "IJK", "code": "UVW"}
+        {"Id": "1011", "Code": "Ab99s0r", "Expiration": "13-10-2024", "Status": "ACTIVE", "Base": "https://endpoint.com/api/action"},
+        {"Id": "1012", "Code": "12dLLd0", "Expiration": "12-11-2024", "Status": "ACTIVE", "Base": "https://endpoint.com/api/action"},
+        {"Id": "1013", "Code": "5540xxD", "Expiration": "10-08-2024", "Status": "ACTIVE", "Base": "https://endpoint.com/api/action"},
+        {"Id": "1014", "Code": "0dd9AsX", "Expiration": "08-05-2024", "Status": "INACTIVE", "Base": "https://endpoint.com/api/action"}
     ]
     
     table.set_title("DATA FROM JSON")
