@@ -399,6 +399,164 @@ class StompBabbler:
         except Exception as ex:
             return False, str(ex)
 
+class TeamsNotification:
+
+    def __init__(self):
+        self.webhook = ""
+        self.type = "standard"
+        self.title = ""
+        self.theme_colour = "0076D7"
+        self.summary = ""
+        self.text = ""
+        self.data = []
+        self.teams_type = "MessageCard"
+        self.profile_image = ""
+        self.profile_name = ""
+        self.teams_context = "http://schema.org/extensions"
+        self.teams_content_type = "application/vnd.microsoft.card.adaptive"
+        self.teams_schema = "http://adaptivecards.io/schemas/adaptive-card.json"
+        self.hook_ready = False
+        self.content_ready = False
+        self.teams_version = "1.6"
+    
+    def set_hook(self, webhook):
+        if len(webhook) > 0:
+            self.webhook = webhook
+            self.hook_ready = True
+
+    def set_profile_image(self, image):
+        self.profile_image = image
+    
+    def set_profile_name(self, name):
+        self.profile_name = name
+        
+    def add_data(self, line):
+        self.data.append({
+            "type": "TextBlock",
+            "text": line,
+            "wrap": True
+        })
+    
+    def assembly_teams_notification(self):
+        notification_body = {}
+        body = []
+        body.append({"type": "TextBlock", "size": "Medium", "weight": "Bolder", "text": self.title})
+        body_content = {}
+        body_content["type"] = "ColumnSet"
+        body_columns = []
+        body_columns.append({"type": "Column", "items": [{"type": "Image", "style": "Person", "url": self.profile_image, "altText": self.profile_name, "size": "Small"}], "width": "auto"})
+        body_columns.append({"type": "Column", "items": [{"type": "TextBlock", "weight": "Bolder", "text": self.profile_name, "wrap": True}, {"type": "TextBlock", "spacing": "None", "text": "Created on " + datetime.now().strftime('%d-%m-%Y at %H:%M'), "isSubtle": True, "wrap": True}], "width": "stretch"})
+        body_content["columns"] = body_columns
+        body.append(body_content)
+        for dat in self.data:
+            body.append(dat)
+    
+        notification_body["type"] = "AdaptiveCard"
+
+        body_columns_data = {}
+        body_columns_data["type"] = "ColumnSet"
+        body_columns_data["columns"] = body_columns
+
+        notification_body["body"] = body
+        notification_body["$schema"] = self.teams_schema
+        notification_body["version"] = self.teams_version
+
+        attachments = []
+        attachments_body = {}
+        attachments_body["contentType"] = self.teams_content_type
+        attachments_body["contentUrl"] = None
+        attachments_body["content"] = notification_body
+        attachments.append(attachments_body)
+
+        notif = {}
+        notif["type"] = "message"
+        notif["attachments"] = attachments
+
+        return notif
+    
+    def assembly_standard_notification(self, title, summary, text):
+        self.type = "standard"
+        self.data = []
+        self.content_ready = True
+        if len(title) > 0:
+            self.title = title.upper()
+        else:
+            self.content_ready = False
+        
+        if len(summary) > 0:
+            self.summary = summary
+        else:
+            self.content_ready = False
+
+        if len(text) > 0:
+            self.text = text
+        else:
+            self.content_ready = False
+    
+    def set_adaptative_notification(self, title):
+        self.type = "AdaptiveCard"
+        self.content_ready = True
+        if len(title) > 0:
+            self.title = title.upper()
+        else:
+            self.content_ready = False
+
+    def send(self):
+        result_ok = True
+        result_message = ""
+
+        if self.type == "standard":
+            if self.content_ready == True and self.hook_ready == True:
+                message = {
+                    "@type": self.teams_type,
+                    "@context": self.teams_context,
+                    "summary": self.summary,
+                    "themeColor": self.theme_colour,
+                    "title": self.title,
+                    "text": self.text
+                }
+
+                try:
+                    response = requests.post(self.webhook, json=message)
+
+                    if response.status_code == 200:
+                        result_message = "OK"
+                        self.summary = ""
+                        self.title = ""
+                        self.text = ""
+                        self.content_ready = False
+                    else:
+                        result_ok = False
+                        result_message = "Error" 
+                except Exception as ex12:
+                    result_ok = False
+                    result_message = "Error: " + ex12
+
+        elif self.type == "AdaptiveCard":
+            if self.content_ready == True and self.hook_ready == True:
+
+                message = self.assembly_teams_notification()
+
+                try:
+                    response = requests.post(self.webhook, json=message)
+
+                    if response.status_code == 200:
+                        result_message = "OK"
+                        self.title = ""
+                        self.text = ""
+                        self.content_ready = False
+
+                        self.data = []
+                    else:
+                        result_ok = False
+                        result_message = "Error: " + str(response.status_code) 
+                except Exception as ex12:
+                    result_ok = False
+                    result_message = "Error: " + ex12
+        
+        return result_ok, result_message
+
+
 class SlackNotification:
     """
     A class to assemble and send notifications to Slack via a webhook.
