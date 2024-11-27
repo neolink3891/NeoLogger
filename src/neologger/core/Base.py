@@ -68,6 +68,7 @@ class Icon:
     CATALOGS = "\U00002699"    # Gear icon
     WARNING = "\U000026A0"     # Warning sign icon
     STAR = "\U0001F31F"        # Glowing star icon
+    STOPWATCH = "\U000023F1"   # Stopwatch
 
 class Template:
     """Predefined templates for styling."""

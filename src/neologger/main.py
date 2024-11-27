@@ -36,6 +36,7 @@ class NeoLogger:
         self.text_colour = FontColour.WHITE
         self.text_style = FontStyle.NORMAL
         self.markers = {}
+        self.stopwatch = Stopwatch()
 
     def set_log_font_colour(self, date_colour, file_colour, function_colour, text_colour):
         """
@@ -300,6 +301,17 @@ class NeoLogger:
             + f"{message}"
             + FontStyle.ENDC
         )
+
+    def start_stopwatch(self, title=""):
+        self.stopwatch = Stopwatch(title)
+
+    def lap(self, label=""):
+        self.stopwatch.lap(label)
+
+    def log_this_with_trace(self, message):
+        stopwatch_data = self.stopwatch.stop()
+
+        self.log_this(message + "\n" + stopwatch_data)
 
     def get_time_mark(self):
         """
@@ -905,3 +917,41 @@ class TableRow:
             return True
         else:
             return False
+
+class Stopwatch:
+    def __init__(self, title=""):
+        self.data = []
+        self.title = title
+
+    def lap(self, label=""):
+        current_epoch = time.time()
+        current_timestamp = datetime.now().strftime('%d-%m-%Y %H:%M:%S.%f')[:-3]
+        difference = 0
+
+        if len(self.data) > 0:
+            prev = self.data[len(self.data) - 1]
+            prev_epoch = float(prev["epoch"])
+            difference = current_epoch - prev_epoch
+
+        if label == "":
+            self.data.append({"label": "Mark " + str(len(self.data) + 1), "timestamp": current_timestamp, "epoch": str(current_epoch), "difference": str(difference) + " Sec."})
+        else:
+            self.data.append({"label": label, "timestamp": current_timestamp, "epoch": str(current_epoch), "difference": str(difference) + " Sec."})
+
+    def stop(self):
+        if len(self.data) > 0:
+            tbl_data = Table()
+            if self.title != "":
+                tbl_data.set_title(Icon.STOPWATCH + " " + self.title)
+            else:
+                tbl_data.set_title(Icon.STOPWATCH + " RESULTS:")
+            tbl_data.enable_total()
+            tbl_data.enable_border()
+
+            output = tbl_data.from_json(self.data)
+
+            self.data = {}
+
+            return output
+        else:
+            return ""

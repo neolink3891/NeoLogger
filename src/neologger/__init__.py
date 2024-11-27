@@ -1,1 +1,1 @@
-from .main import NeoLogger, StompBabbler, SlackNotification, Table, TeamsNotification
+from .main import NeoLogger, StompBabbler, SlackNotification, Table, TeamsNotification, Stopwatch

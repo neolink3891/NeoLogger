@@ -96,6 +96,17 @@ def main():
     table.enable_border()
     neologger.log_this(table.from_json(jdata))
 
+    print("Testing embedded stopwatch in neologger")
+    neologger.start_stopwatch("ABC function trace")
+    neologger.lap("Function is starting")
+    time.sleep(0.34)
+    neologger.lap("First checkpoint reached")
+    time.sleep(1.26)
+    neologger.lap("Second checkpoint reached")
+    time.sleep(0.45)
+    neologger.lap("Last checkpoint reached")
+    neologger.log_this_with_trace("Function ABC has completed execution.")
+
 
 if __name__ == "__main__":
     main()
