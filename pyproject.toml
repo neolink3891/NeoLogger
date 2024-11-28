@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "neologger"
-version = "1.3.1"
-description = "NeoLogger is a versatile Python library that simplifies and enhances logging and notifications in your applications. NeoLogger seamlessly integrates with Slack and Microsoft Teams for real-time notifications and supports broadcasting messages over the STOMP protocol. With its straightforward API, it streamlines the incorporation of advanced logging and notification features, saving you development time and effort."
+version = "1.4.1"
+description = "NeoLogger is a versatile Python library that simplifies and enhances logging and notifications in your applications. It seamlessly integrates with Slack and Microsoft Teams for real-time notifications and supports broadcasting messages over the STOMP protocol. With its straightforward API, it streamlines the incorporation of advanced logging and notification features, saving you development time and effort. NeoLogger now includes a Stopwatch class to track function execution times with precision and an Alarm class to raise notifications when thresholds are exceeded, making it even easier to monitor and optimize your application performance."
 authors = [
     { name="Pablo Martinez", email="neolink3891@gmail.com" },
 ]
@@ -21,6 +21,16 @@ dependencies = [
     "stomp.py",
     "requests",
 ]
-
+keywords = ["logging", "notifications", "Slack", "Microsoft Teams", "STOMP", "monitoring", "performance"]
 [project.urls]
 "Homepage" = "https://github.com/neolink3891/NeoLogger"
+"Source" = "https://github.com/neolink3891/NeoLogger"
+"Issues" = "https://github.com/neolink3891/NeoLogger/issues"
+"LinkedIn" = "https://www.linkedin.com/in/orlando-martinez-2649051aa"
+"X" = "https://x.com/neolink3891"
+"Medium" = "https://medium.com/@neolink3891"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = ["tests"]

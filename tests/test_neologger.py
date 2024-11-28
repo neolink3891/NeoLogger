@@ -1,9 +1,12 @@
-from neologger import NeoLogger, Table
+from neologger import NeoLogger, Table, Alarm, SlackNotification
 from neologger.core import Template
-from neologger.core import FontColour, FontStyle
+from neologger.core import FontColour, FontStyle, Condition
 import time
 
-neologger = NeoLogger("test_neolloger.py")
+slack = SlackNotification()
+slack.set_hook("[SLACK_WEBHOOK_URL]")
+alarm = Alarm(3, slack=slack)
+neologger = NeoLogger("test_neolloger.py", alarm=alarm)
 
 def main():
     print("\nBasic example:\n")
@@ -53,7 +56,7 @@ def main():
     neologger.set_template(Template.BASE)
     print("\nExample with Elapsed Time display\n")
     time_track = neologger.get_time_mark()
-    # time.sleep(1) # Adding delay
+    time.sleep(4) # Adding delay
     neologger.log_with_elapsed_time("Function completed.", time_track)
     print("\n")
 

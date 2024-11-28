@@ -3,7 +3,7 @@
 from datetime import datetime
 import time
 import logging
-from .core import FontColour, BackgroundColour, FontStyle, Icon, Template
+from .core import FontColour, BackgroundColour, FontStyle, Icon, Template, Condition
 import stomp
 import json
 import inspect
@@ -19,7 +19,7 @@ class NeoLogger:
     colors, styles, and templates for log messages.
     """
 
-    def __init__(self, initialized_by):
+    def __init__(self, initialized_by, alarm=None, teams=None, slack=None, stopwatch=None):
         """
         Initialize the NeoLogger with default styling.
 
@@ -36,7 +36,10 @@ class NeoLogger:
         self.text_colour = FontColour.WHITE
         self.text_style = FontStyle.NORMAL
         self.markers = {}
-        self.stopwatch = Stopwatch()
+        self.stopwatch = stopwatch
+        self.alarm = alarm
+        self.slack = slack
+        self.teams = teams
 
     def set_log_font_colour(self, date_colour, file_colour, function_colour, text_colour):
         """
@@ -306,7 +309,7 @@ class NeoLogger:
         self.stopwatch = Stopwatch(title)
 
     def lap(self, label=""):
-        self.stopwatch.lap(label)
+        self.stopwatch.lap(label, alarm=self.alarm)
 
     def log_this_with_trace(self, message):
         stopwatch_data = self.stopwatch.stop()
@@ -359,6 +362,10 @@ class NeoLogger:
             + f" [Elapsed time: {elapsed_time} seconds.]"
             + FontStyle.ENDC
         )
+
+        if self.alarm:
+            self.alarm.check(elapsed_time, start_time, summary="Function " + from_here + " raised an Alarm", title="NeoLogger Alarm.")
+
         return f"Elapsed time: {elapsed_time} seconds."
 
 class StompBabbler:
@@ -923,21 +930,32 @@ class Stopwatch:
         self.data = []
         self.title = title
 
-    def lap(self, label=""):
+    def lap(self, label="", alarm=None):
         current_epoch = time.time()
         current_timestamp = datetime.now().strftime('%d-%m-%Y %H:%M:%S.%f')[:-3]
         difference = 0
+        prev_epoch = None
+        alarm_icon = ""
+        if label == "":
+            label = "Mark " + str(len(self.data) + 1)
+        
 
         if len(self.data) > 0:
             prev = self.data[len(self.data) - 1]
             prev_epoch = float(prev["epoch"])
             difference = current_epoch - prev_epoch
 
-        if label == "":
-            self.data.append({"label": "Mark " + str(len(self.data) + 1), "timestamp": current_timestamp, "epoch": str(current_epoch), "difference": str(difference) + " Sec."})
-        else:
-            self.data.append({"label": label, "timestamp": current_timestamp, "epoch": str(current_epoch), "difference": str(difference) + " Sec."})
+            if alarm and len(self.data) > 0:
+                alarm.check(prev_epoch, current_epoch, summary=label, title="New Alarm.")
+                if alarm.last_result:
+                    alarm_icon = "[*]"
 
+        if label == "":
+            self.data.append({"label": label, "timestamp": current_timestamp, "epoch": str(current_epoch), "difference": str(difference) + " Sec.", "alarm": alarm_icon})
+        else:
+            self.data.append({"label": label, "timestamp": current_timestamp, "epoch": str(current_epoch), "difference": str(difference) + " Sec.", "alarm": alarm_icon})
+
+        
     def stop(self):
         if len(self.data) > 0:
             tbl_data = Table()
@@ -955,3 +973,51 @@ class Stopwatch:
             return output
         else:
             return ""
+
+class Alarm:
+    def __init__(self, threshold, condition=Condition.ABOVE_OR_EQUAL, slack=None, teams=None):
+        self.threshold = threshold
+        self.condition = condition
+        self.slack = slack
+        self.teams = teams
+        self.last_result = False
+
+    def check(self, init_time, end_time, summary="New Alarm", title="An Alarm has been raced.", icon="loud_sound"):
+        evaluation = False
+        self.last_result = False
+
+        difference = end_time - init_time
+        
+        if self.condition == Condition.ABOVE:
+            if difference > self.threshold:
+                evaluation = True
+        elif self.condition == Condition.ABOVE_OR_EQUAL:
+            if difference >= self.threshold:
+                evaluation = True
+        elif self.condition == Condition.EQUAL:
+            if difference == self.threshold:
+                evaluation = True
+        elif self.condition == Condition.BELOW:
+            if difference < self.threshold:
+                evaluation = True
+        elif self.condition == Condition.BELOW_OR_EQUAL:
+            if difference <= self.threshold:
+                evaluation = True
+        
+        if evaluation:
+            self.last_result = True
+            if self.slack:
+                self.slack.add_data("Threshold", str(self.threshold) + " Sec.")
+                self.slack.add_data("Value", str(difference) + " Sec.")
+                self.slack.assembly_notification(
+                    title=title, 
+                    summary=summary,
+                    icon=icon
+                )
+                status, response = self.slack.send()
+
+            if self.teams:
+                self.teams.set_adaptative_notification("AN ALARM HAS BEEN RACED")
+                self.teams.add_data("Threshold: " + str(self.threshold) + " Sec.")
+                self.teams.add_data("Value: " + str(difference) + " Sec.")
+                result, message = self.teams.send()

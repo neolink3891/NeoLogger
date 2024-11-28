@@ -1,1 +1,1 @@
-from .Base import FontColour, BackgroundColour, FontStyle, Icon, Template
+from .Base import FontColour, BackgroundColour, FontStyle, Icon, Template, Condition

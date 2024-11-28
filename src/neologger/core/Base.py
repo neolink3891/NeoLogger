@@ -75,3 +75,10 @@ class Template:
     NORMAL = "NORMAL"          # Normal template
     DARK = "DARK"              # Dark template
     BASE = "BASE"              # Base template
+
+class Condition:
+    BELOW = "BELOW"
+    BELOW_OR_EQUAL = "BELOW_OR_EQUAL"
+    EQUAL = "EQUAL"
+    ABOVE = "ABOVE"
+    ABOVE_OR_EQUAL = "ABOVE_OR_EQUAL"
