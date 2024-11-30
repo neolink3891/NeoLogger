@@ -867,8 +867,10 @@ class Table:
                     col_len = len(str(rw.rows[0][current_pos]))
                     if col_len > max_size:
                         max_size = col_len
+                    
                 current_pos += 1
-                sel_max = hd_col_len
+                
+                sel_max = max_size
                 if col_len > sel_max:
                     sel_max = col_len
                 
@@ -935,14 +937,14 @@ class Stopwatch:
         current_timestamp = datetime.now().strftime('%d-%m-%Y %H:%M:%S.%f')[:-3]
         difference = 0
         prev_epoch = None
-        alarm_icon = ""
+        alarm_icon = "   "
         if label == "":
             label = "Mark " + str(len(self.data) + 1)
         
 
         if len(self.data) > 0:
             prev = self.data[len(self.data) - 1]
-            prev_epoch = float(prev["epoch"])
+            prev_epoch = float(prev["EPOCH"])
             difference = current_epoch - prev_epoch
 
             if alarm and len(self.data) > 0:
@@ -950,10 +952,13 @@ class Stopwatch:
                 if alarm.last_result:
                     alarm_icon = "[*]"
 
+        ce = "{:.3f}".format(current_epoch)
+        df = "{:.5f}".format(difference)
+
         if label == "":
-            self.data.append({"label": label, "timestamp": current_timestamp, "epoch": str(current_epoch), "difference": str(difference) + " Sec.", "alarm": alarm_icon})
+            self.data.append({"LABEL": label, "TIMESTAMP": current_timestamp, "EPOCH": ce, "ELAPSED": df + " Sec.", "ALARM": alarm_icon})
         else:
-            self.data.append({"label": label, "timestamp": current_timestamp, "epoch": str(current_epoch), "difference": str(difference) + " Sec.", "alarm": alarm_icon})
+            self.data.append({"LABEL": label, "TIMESTAMP": current_timestamp, "EPOCH": ce, "ELAPSED": df + " Sec.", "ALARM": alarm_icon})
 
         
     def stop(self):
