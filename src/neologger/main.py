@@ -928,56 +928,78 @@ class TableRow:
             return False
 
 class Stopwatch:
+    # Initialize the Stopwatch class with an optional title
     def __init__(self, title=""):
-        self.data = []
-        self.title = title
+        self.data = []  # List to store lap data (timestamps, labels, etc.)
+        self.title = title  # Title for the stopwatch
 
+    # Method to record a lap with optional label and alarm
     def lap(self, label="", alarm=None):
+        # Get the current time in epoch format and a formatted timestamp
         current_epoch = time.time()
         current_timestamp = datetime.now().strftime('%d-%m-%Y %H:%M:%S.%f')[:-3]
-        difference = 0
-        prev_epoch = None
-        alarm_icon = "   "
+        
+        difference = 0  # Time difference between the current and previous lap
+        prev_epoch = None  # To store the epoch time of the previous lap
+        alarm_icon = "   "  # Default value for alarm icon (empty if no alarm)
+
+        # Assign a default label if none is provided
         if label == "":
             label = "Mark " + str(len(self.data) + 1)
         
-
+        # Calculate the time difference if there are previous laps
         if len(self.data) > 0:
-            prev = self.data[len(self.data) - 1]
-            prev_epoch = float(prev["EPOCH"])
-            difference = current_epoch - prev_epoch
+            prev = self.data[len(self.data) - 1]  # Get the last lap's data
+            prev_epoch = float(prev["EPOCH"])  # Extract the epoch time from the last lap
+            difference = current_epoch - prev_epoch  # Calculate the elapsed time
 
+            # Check the alarm if provided and handle alarm notifications
             if alarm and len(self.data) > 0:
                 alarm.check(prev_epoch, current_epoch, summary=label, title="New Alarm.")
-                if alarm.last_result:
+                if alarm.last_result:  # If the alarm condition is met, update the icon
                     alarm_icon = "[*]"
 
-        ce = "{:.3f}".format(current_epoch)
-        df = "{:.5f}".format(difference)
+        # Format the epoch time and difference with specific decimal precision
+        ce = "{:.3f}".format(current_epoch)  # Current epoch with 3 decimal places
+        df = "{:.5f}".format(difference)  # Time difference with 5 decimal places
 
-        if label == "":
-            self.data.append({"LABEL": label, "TIMESTAMP": current_timestamp, "EPOCH": ce, "ELAPSED": df + " Sec.", "ALARM": alarm_icon})
-        else:
-            self.data.append({"LABEL": label, "TIMESTAMP": current_timestamp, "EPOCH": ce, "ELAPSED": df + " Sec.", "ALARM": alarm_icon})
+        # Append the new lap data to the list
+        self.data.append({
+            "LABEL": label,  # Label for the lap
+            "TIMESTAMP": current_timestamp,  # Human-readable timestamp
+            "EPOCH": ce,  # Formatted epoch time
+            "ELAPSED": df + " Sec.",  # Formatted elapsed time in seconds
+            "ALARM": alarm_icon  # Alarm status icon
+        })
 
-        
+    # Method to stop the stopwatch and display the results
     def stop(self):
+        # Check if there are recorded laps
         if len(self.data) > 0:
-            tbl_data = Table()
+            tbl_data = Table()  # Create a Table object to display the results
+
+            # Set the title of the results table based on the stopwatch title
             if self.title != "":
                 tbl_data.set_title(Icon.STOPWATCH + " " + self.title)
             else:
                 tbl_data.set_title(Icon.STOPWATCH + " RESULTS:")
+
+            # Enable additional table settings (e.g., totals, borders)
             tbl_data.enable_total()
             tbl_data.enable_border()
 
+            # Convert the lap data to a table format
             output = tbl_data.from_json(self.data)
 
+            # Clear the stored lap data
             self.data = {}
 
+            # Return the formatted results table
             return output
         else:
+            # Return an empty string if no laps were recorded
             return ""
+
 
 class Alarm:
     def __init__(self, threshold, condition=Condition.ABOVE_OR_EQUAL, slack=None, teams=None):

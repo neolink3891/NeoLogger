@@ -4,7 +4,7 @@
    
 
 <p align="center">
-  <img src="docs/imgs/neologger_banner.png" alt="NeoLogger Banner">
+  <img src="docs/imgs/home.png" alt="NeoLogger Banner">
 </p>
 
 A collection of Python notification classes for enhanced logging, messaging, and Slack notifications.   
@@ -67,6 +67,13 @@ Examples of Teams Notification usage as well as examples for custom for notifica
 
 <p align="center">
   <img src="docs/imgs/teams_notification_demo.png" alt="NeoLogger Banner">
+</p>
+
+- [Stopwatch](docs/stopwatch.md)    
+This class allows to trace function execution and display a table with the trace log.
+
+<p align="center">
+  <img src="docs/imgs/stopwatch_2.png" alt="NeoLogger Banner">
 </p>
 
 ## Contributing
