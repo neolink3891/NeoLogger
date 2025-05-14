@@ -20,6 +20,7 @@ NeoLogger provides a set of tools to improve logging output with customizable st
 - **NeoLogger**: Advanced logging with customizable colors, styles, and templates.
 - **StompBabbler**: Send messages over STOMP protocol to a specified queue.
 - **SlackNotification**: Assemble and send richly formatted notifications to Slack channels via webhooks.
+- **DiscordNotification**: Assemble and send beautiful notifications to Discord channels via webhooks.
 
 ## Installation
 
@@ -57,6 +58,13 @@ Examples of Slack Notification usage as well as examples for custom for notifica
 
 <p align="center">
   <img src="docs/imgs/neologger_17.png" alt="NeoLogger Banner">
+</p>
+
+- [DiscordNotifications](docs/discordnotifications.md)    
+Examples of Slack Notification usage as well as examples for custom for notifications.
+
+<p align="center">
+  <img src="docs/imgs/neologger_19.png" alt="NeoLogger Banner">
 </p>
 
 - [StompBabbler](docs/stompbabbler.md)    

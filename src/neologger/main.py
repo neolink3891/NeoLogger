@@ -712,6 +712,154 @@ class SlackNotification:
         else:
             return False, "Not Ready"
 
+class DiscordNotification:
+    """
+    A class to assemble and send notifications to Discord via a webhook.
+    Info available at: https://birdie0.github.io/discord-webhooks-guide/discord_webhook.html
+    """
+
+    class Embed:
+
+        def __init__(self):
+
+            self.data = {}
+            self.data["title"] = "Notification"
+            self.data["description"] = "Description"
+
+        def set(self, title: str = None, description: str = None, color: str = None):
+
+            if title:
+                self.data["title"] = title
+            if description:
+                self.data["description"] = description
+            if color:
+                self.data["color"] = color
+
+        def get(self, key):
+
+            return self.data[key]
+
+        def print(self):
+
+            print(self.data)
+
+        def add_image(self, url):
+
+            self.data["image"] = {"url": url}
+
+        def add_thumbnail(self, url):
+
+            self.data["thumbnail"] = {"url": url}
+
+        def add_author(self, name: str = None, url: str = None, icon_url: str = None):
+
+            author = {}
+            if name:
+                author["name"] = name
+            if url:
+                author["url"] = url
+            if icon_url:
+                author["icon_url"] = icon_url
+            if author != {}:
+                self.data["author"] = author
+        
+        def add_field(self, name: str = None, value: str = None, inline: bool = False):
+
+            field = {}
+            if name:
+                field["name"] = name
+            if value:
+                field["value"] = value
+            if inline:
+                field["inline"] = inline
+            if field != {}:
+                if self.data.get("fields"):
+                    self.data["fields"].append(field)
+                else:
+                    self.data["fields"] = [field]
+
+        def add_footer(self, text: str = None, icon_url: str = None):
+
+            footer = {}
+            if text:
+                footer["text"] = text
+            if icon_url:
+                footer["icon_url"] = icon_url
+            if footer != {}:
+                self.data["footer"] = footer
+                
+    def __init__(self):
+        """
+        Initialize the DiscordNotification with default values.
+        """
+        self.hook = ""
+        self.ready = False
+        self.body = {}
+        self.embeds = []
+
+    def set_hook(self, hook):
+        """
+        Set the Slack webhook URL.
+
+        Args:
+            hook (str): The Discord webhook URL.
+        """
+        self.hook = hook
+        self.ready = True
+
+    def set_username(self, username):
+
+        self.body["username"] = username
+
+    def set_avatar_url(self, url):
+
+        self.body["avatar_url"] = url
+
+    def add_content(self, message):
+
+        self.body["content"] = message
+
+    def create_embed(self):
+
+        embed = self.Embed()
+        return embed
+
+    def add_embed(self, embed):
+
+        self.embeds.append(embed.data) 
+        self.body["embeds"] = self.embeds
+        self.body.pop("content", None) 
+
+    def send(self):
+        """
+        Send the assembled notification to Discord.
+
+        Returns:
+            tuple: A tuple containing a boolean status and a message.
+        """
+        if self.ready:
+            if self.body is not None:
+                try:
+                    response = requests.post(
+                        self.hook,
+                        data=json.dumps(self.body),
+                        headers={'Content-Type': 'application/json'}
+                    )
+
+                    if response.status_code == 200:
+                        return True, "OK"
+                    else:
+                        return False, f"HTTP Error: {response.status_code}"
+                except requests.exceptions.RequestException as ex:
+                    return False, f"Request error: {str(ex)}"
+                except Exception as ex:
+                    return False, str(ex)
+            else:
+                return False, "Empty Body"
+        else:
+            return False, "Not Ready"
+
+
 class Table:
     """
     A class to display data in a table format.
