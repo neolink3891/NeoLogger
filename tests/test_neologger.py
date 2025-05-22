@@ -83,7 +83,7 @@ def main():
     table.push_row(row)
     table.enable_total()
     table.enable_border()
-    neologger.log_this(table.render())
+    neologger.log_this(table.render(), save_json=False)
 
     print("\nExample of Table from JSON")
     table = Table()
@@ -97,7 +97,7 @@ def main():
     table.set_title("DATA FROM JSON")
     table.enable_total()
     table.enable_border()
-    neologger.log_this(table.from_json(jdata))
+    neologger.log_this(table.from_json(jdata), save_json=False)
 
     print("Testing embedded stopwatch in neologger")
     neologger.start_stopwatch("ABC function trace")

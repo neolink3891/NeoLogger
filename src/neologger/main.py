@@ -8,6 +8,7 @@ import stomp
 import json
 import inspect
 import requests
+import os
 
 # Configure the logger
 logger = logging.getLogger(__name__)
@@ -40,6 +41,16 @@ class NeoLogger:
         self.alarm = alarm
         self.slack = slack
         self.teams = teams
+        logs_location = "jsonlogs"
+        logs_file = "logs.json"
+        self.log_filename = logs_location + "/" + logs_file
+
+        if not os.path.exists(logs_location):
+            os.makedirs(logs_location)
+        
+        if os.path.isfile(self.log_filename):
+            lg_file = open(logs_location + "/" + logs_file, "w")
+            lg_file.close()
 
     def set_log_font_colour(self, date_colour, file_colour, function_colour, text_colour):
         """
@@ -101,7 +112,7 @@ class NeoLogger:
                 FontStyle.NORMAL, FontStyle.NORMAL, FontStyle.NORMAL, FontStyle.NORMAL
             )
 
-    def log_this(self, message):
+    def log_this(self, message, save_json=True):
         """
         Log a general information message with the current styling.
 
@@ -110,6 +121,7 @@ class NeoLogger:
         """
         stack = inspect.stack()
         from_here = stack[1].function
+        time_stamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]  # With milliseconds
         logging.info(
             self.date_colour
             + self.date_style
@@ -130,6 +142,32 @@ class NeoLogger:
             + FontStyle.ENDC
         )
 
+        if save_json:
+            self.log_this_json(time_stamp, stack[1].filename, stack[1].function, message)
+    
+    def log_this_json(self, timest, source_name, function_name, log_message, log_type="INFO"):
+        """
+        Log a JSON message for automated processing.
+        """
+        log_entry = {
+            "timestamp": timest,
+            "type": log_type,
+            "source": source_name,
+            "function": function_name,
+            "log": log_message,
+        }
+
+        if os.path.exists(self.log_filename) and os.path.getsize(self.log_filename) > 0:
+            with open(self.log_filename, "r") as log_file:
+                logs = json.load(log_file)
+        else:
+            logs = []
+
+        logs.append(log_entry)
+
+        with open(self.log_filename, "w") as log_file:
+            json.dump(logs, log_file, indent=4)
+
     def log_this_warning(self, message):
         """
         Log a warning message with a warning icon and styling.
@@ -139,6 +177,7 @@ class NeoLogger:
         """
         stack = inspect.stack()
         from_here = stack[1].function
+        time_stamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
         logging.warning(
             FontColour.YELLOW
             + FontStyle.BOLD
@@ -165,6 +204,8 @@ class NeoLogger:
             + FontStyle.ENDC
         )
 
+        self.log_this_json(time_stamp, stack[1].filename, stack[1].function, message, log_type="WARNING")
+
     def log_this_ok(self, message):
         """
         Log a success message indicating an operation was OK.
@@ -174,6 +215,7 @@ class NeoLogger:
         """
         stack = inspect.stack()
         from_here = stack[1].function
+        time_stamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
         logging.info(
             FontColour.GREEN
             + FontStyle.BOLD
@@ -200,6 +242,8 @@ class NeoLogger:
             + FontStyle.ENDC
         )
 
+        self.log_this_json(time_stamp, stack[1].filename, stack[1].function, message)
+
     def log_this_error(self, message):
         """
         Log an error message with an error icon and styling.
@@ -209,6 +253,7 @@ class NeoLogger:
         """
         stack = inspect.stack()
         from_here = stack[1].function
+        time_stamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
         logging.error(
             FontColour.RED
             + FontStyle.BOLD
@@ -235,6 +280,8 @@ class NeoLogger:
             + FontStyle.ENDC
         )
 
+        self.log_this_json(time_stamp, stack[1].filename, stack[1].function, message, log_type="ERROR")
+
     def log_this_completed(self, message):
         """
         Log a message indicating a task has been completed.
@@ -243,6 +290,7 @@ class NeoLogger:
             message (str): The completion message to log.
         """
         stack = inspect.stack()
+        time_stamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
         from_here = stack[1].function
         logging.info(
             FontColour.CYAN
@@ -270,6 +318,8 @@ class NeoLogger:
             + FontStyle.ENDC
         )
 
+        self.log_this_json(time_stamp, stack[1].filename, stack[1].function, message)
+
     def log_this_success(self, message):
         """
         Log a success message with a star icon.
@@ -278,6 +328,7 @@ class NeoLogger:
             message (str): The success message to log.
         """
         stack = inspect.stack()
+        time_stamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
         from_here = stack[1].function
         logging.info(
             FontColour.MAGENTA
@@ -305,6 +356,8 @@ class NeoLogger:
             + FontStyle.ENDC
         )
 
+        self.log_this_json(time_stamp, stack[1].filename, stack[1].function, message)
+
     def start_stopwatch(self, title=""):
         self.stopwatch = Stopwatch(title)
 
@@ -314,7 +367,7 @@ class NeoLogger:
     def log_this_with_trace(self, message):
         stopwatch_data = self.stopwatch.stop()
 
-        self.log_this(message + "\n" + stopwatch_data)
+        self.log_this(message + "\n" + stopwatch_data, save_json=False)
 
     def get_time_mark(self):
         """

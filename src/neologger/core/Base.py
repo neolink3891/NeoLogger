@@ -82,3 +82,10 @@ class Condition:
     EQUAL = "EQUAL"
     ABOVE = "ABOVE"
     ABOVE_OR_EQUAL = "ABOVE_OR_EQUAL"
+
+class Letter:
+    ASCII_CAPITALS = {
+        "A": [
+            ""
+        ]
+    }
