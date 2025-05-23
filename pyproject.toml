@@ -1,13 +1,14 @@
 [build-system]
-requires = ["setuptools>=42", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling==1.26.3", "hatch-vcs"]
+build-backend = "hatchling.build"
 
 [project]
 name = "neologger"
-version = "1.4.2"
+version = "1.5.2"
 description = "NeoLogger is a versatile Python library that simplifies and enhances logging and notifications in your applications. It seamlessly integrates with Slack and Microsoft Teams for real-time notifications and supports broadcasting messages over the STOMP protocol. It incorporates advanced logging and notification features, saving you development time and effort. Now includes a Stopwatch class to track function execution times with precision and an Alarm class to raise notifications when thresholds are exceeded."
 authors = [
     { name="Pablo Martinez", email="neolink3891@gmail.com" },
+    { name="Matt Sullivan", email="mattys940@gmail.com" }
 ]
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -21,12 +22,13 @@ dependencies = [
     "stomp.py",
     "requests",
 ]
-keywords = ["logging", "notifications", "Slack", "Microsoft Teams", "STOMP", "monitoring", "performance"]
+keywords = ["logging", "notifications", "Slack", "Microsoft Teams", "Discord", "STOMP", "monitoring", "performance"]
 [project.urls]
 "Homepage" = "https://github.com/neolink3891/NeoLogger"
 "Source" = "https://github.com/neolink3891/NeoLogger"
 "Issues" = "https://github.com/neolink3891/NeoLogger/issues"
-"LinkedIn" = "https://www.linkedin.com/in/orlando-martinez-2649051aa"
+"LinkedIn (Pablo Martinez)" = "https://www.linkedin.com/in/orlando-martinez-2649051aa"
+"LinkedIn (Matt Sullivan)" = "https://www.linkedin.com/in/matthewjamessullivan"
 "X" = "https://x.com/neolink3891"
 "Medium" = "https://medium.com/@neolink3891"
 

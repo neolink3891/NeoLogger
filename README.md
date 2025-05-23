@@ -7,7 +7,7 @@
   <img src="docs/imgs/home.png" alt="NeoLogger Banner">
 </p>
 
-A collection of Python notification classes for enhanced logging, messaging, and Slack notifications.   
+A collection of Python notification classes for enhanced logging, messaging, and notifications (Slack, Teams, Discord, STOMP).   
 
 [Find me on PyPi.org](https://pypi.org/project/neologger/) 
 
@@ -102,6 +102,10 @@ Utilizes the requests library for HTTP requests to Slack webhooks.
 ## Contact
 
 📧 - For questions or suggestions, please contact Pablo Martinez at neolink3891@gmail.com    
+
+🌐 - You can also connect with me on [LinkedIn](https://www.linkedin.com/in/orlando-martinez-2649051aa).
+
+📧 - Project co-author: Matt Sullivan at mattys940@gmail.com   
 
 🌐 - You can also connect with me on [LinkedIn](https://www.linkedin.com/in/orlando-martinez-2649051aa).
 
